@@ -1,166 +1,91 @@
-🤖🤖🤖 MEMORY CHALLANGE 🤖🤖🤖
+🤖🤖🤖 CLIMATE MONITOR 🤖🤖🤖
 
-![Terrific Gaaris-Juttu![Smashing Blorr](https://github.com/user-attachments/assets/afd3b583-1180-41c1-aaa7-77e15fbd9421)
+[Smashing Blorr](https://github.com/user-attachments/assets/afd3b583-1180-41c1-aaa7-77e15fbd9421)
 
 
 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
 
-# Memory Challenge Game - LUMAX LAB
+# Climate Monitor - LUMAX LAB
 
 ## Description
-This code implements a MEMORY CHALLANGE game with LEDs, buttons, and a buzzer. The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. If the player repeats the sequence correctly, the game progresses to the next level. If the player makes a mistake, the game resets to the first level.
+This code implements a system to measure and display temperature and humidity values using the DHT11 sensor and an I2C-controlled LCD. The measurements are continuously taken and displayed on both the LCD and the Serial Monitor. If there's an error reading the sensor, an error message will appear on the LCD and the Serial Monitor.
 
 ## Code
 
 ```cpp
 
 /* 
-   Project: Memory Challenge
+   Project: Temperature and Humidity Display with DHT11 and I2C LCD
    Developed by: Lumax Lab
-   Description: This code implements a Simon Says game with LEDs, buttons, and a buzzer. 
-   The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. 
-   If the player repeats the sequence correctly, the game progresses to the next level. 
-   If the player makes a mistake, the game resets to the first level.
+   Description: This code reads temperature and humidity data from the DHT11 sensor and displays them on an I2C LCD.
+   The data is also sent to the Serial Monitor for debugging purposes.
 */
 
+#include <Wire.h>               // Library for I2C communication
+#include <LiquidCrystal_I2C.h>  // Library for controlling LCD with I2C
+#include <DHT.h>                // Library for the DHT sensor
 
-#include <Arduino.h>
+// I2C LCD configuration
+#define LCD_ADDRESS 0x27        // I2C address of the LCD (0x27 is the most common; adjust if necessary)
+#define LCD_COLUMNS 16          // Number of columns on the LCD
+#define LCD_ROWS 2              // Number of rows on the LCD
+LiquidCrystal_I2C lcd(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS); // Initialize the LCD
 
-// Define LED, Button, and Buzzer pins
-const int ledPins[] = {2, 3, 4, 5, 6};     // LED pins
-const int buttonPins[] = {7, 8, 9, 10, 11}; // Button pins
-const int buzzerPin = 12;                  // Buzzer pin
-
-int gameSequence[10];  // Array to store the LED sequence for the game
-int sequenceLength = 1; // Length of the sequence (starts with 1)
-int playerIndex = 0;    // Index for player to compare against
+// DHT11 sensor configuration
+#define DHTPIN 3                // Pin where the DHT11 is connected
+#define DHTTYPE DHT11           // Type of DHT sensor
+DHT dht(DHTPIN, DHTTYPE);       // Initialize the DHT object
 
 void setup() {
-  // Set LED pins as outputs
-  for (int i = 0; i < 5; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], LOW); // Initialize LEDs to be off
-  }
+  // Serial Monitor initialization
+  Serial.begin(9600);
+  Serial.println("Initiating DHT11 and LCD I2C...");
 
-  // Set button pins as inputs with internal pull-up resistors
-  for (int i = 0; i < 5; i++) {
-    pinMode(buttonPins[i], INPUT_PULLUP);
-  }
+  // LCD initialization
+  lcd.init();             // Initialize the LCD
+  lcd.backlight();        // Turn on the LCD backlight
+  lcd.print("Initiating"); // Initial message on the LCD
+  delay(2000);            // Wait for 2 seconds
 
-  pinMode(buzzerPin, OUTPUT);  // Set the buzzer pin as output
-  randomSeed(analogRead(0));   // Initialize random number generator
+  // DHT sensor initialization
+  dht.begin();
 }
 
 void loop() {
-  // Start the game with the first sequence
-  if (playerIndex == 0) {
-    generateSequence();        // Generate the LED sequence
-    playSequence();            // Display the sequence to the player
+  // Read humidity and temperature data from the DHT sensor
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+
+  // Check if the sensor reading is valid
+  if (isnan(humidity) || isnan(temperature)) {
+    lcd.clear();
+    lcd.print("Sensor error");  // Display error message on the LCD
+    Serial.println("Error: Failed to read from DHT11 sensor."); // Log to Serial Monitor
+    delay(2000);
+    return;
   }
 
-  // Wait for the player to press the correct button
-  bool correctButtonPressed = false;
-  while (!correctButtonPressed) {
-    for (int i = 0; i < 5; i++) {
-      if (digitalRead(buttonPins[i]) == LOW) { // Button pressed
-        digitalWrite(ledPins[i], HIGH);        // Turn on the corresponding LED
-        delay(500);                            // Wait for a while
-        digitalWrite(ledPins[i], LOW);         // Turn off the LED
+  // Display data on the LCD
+  lcd.clear();  // Clear the LCD screen
+  lcd.setCursor(0, 0);  // Set the cursor to the first line
+  lcd.print("Temp: ");  // Display "Temp: "
+  lcd.print(temperature);  // Display the temperature value
+  lcd.print(" C");  // Display "C"
 
-        // Check if the pressed button corresponds to the player's sequence
-        if (gameSequence[playerIndex] == i) {
-          playerIndex++;  // Player got it right, move to the next LED
+  lcd.setCursor(0, 1);  // Set the cursor to the second line
+  lcd.print("Humi: ");  // Display "Humi: "
+  lcd.print(humidity);  // Display the humidity value
+  lcd.print(" %");  // Display "%"
 
-          if (playerIndex == sequenceLength) {  // If the entire sequence is completed correctly
-            playSuccessTone();   // Play success tone
-            showSuccessEffect(); // Show success effect with LEDs
-            sequenceLength++;    // Increase the sequence length for the next level
-            playerIndex = 0;     // Reset the player's index to restart the sequence
-            delay(2000);          // Wait for 2 seconds before starting the next level
-          }
-          correctButtonPressed = true;  // Correct button was pressed, move to the next LED
-        } else {
-          playErrorTone();     // Play error tone
-          showErrorEffect();   // Show error effect with LEDs flashing
-          sequenceLength = 1;  // Reset sequence length to level 1
-          playerIndex = 0;     // Reset player's index
-          delay(2000);         // Wait for 2 seconds before restarting the game
-          correctButtonPressed = true;  // Stop waiting and restart the game
-        }
-      }
-    }
-  }
+  // Send data to the Serial Monitor
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" C");
+
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+
+  delay(2000);  // Wait for 2 seconds before updating
 }
-
-// Function to generate a random sequence of LEDs
-void generateSequence() {
-  for (int i = 0; i < sequenceLength; i++) {
-    gameSequence[i] = random(0, 5);  // Generate a random number between 0 and 4 (for 5 LEDs)
-  }
-}
-
-// Function to play the LED sequence for the player
-void playSequence() {
-  for (int i = 0; i < sequenceLength; i++) {
-    digitalWrite(ledPins[gameSequence[i]], HIGH);
-    delay(500); // Keep the LED on for 500ms
-    digitalWrite(ledPins[gameSequence[i]], LOW);
-    delay(200); // Wait 200ms between LEDs
-  }
-}
-
-// Function to play the success tone on the buzzer (Access Granted)
-void playSuccessTone() {
-  tone(buzzerPin, 1000, 300); // 1000Hz tone for 300ms (success tone)
-}
-
-// Function to play the error tone on the buzzer (Access Denied)
-void playErrorTone() {
-  // 300Hz tone for 500ms
-  tone(buzzerPin, 300, 500);  
-  delay(500); // Wait for the tone to finish before playing it again
-  
-  // Play the tone again
-  tone(buzzerPin, 300, 500);  
-  delay(500); // Wait for the tone to finish before continuing
-}
-
-// Function to show success effect with LEDs
-void showSuccessEffect() {
-  // Turn on all LEDs
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], HIGH);
-  }
-  delay(500); // Keep LEDs on for 500ms
-  resetLEDs(); // Turn off all LEDs
-  delay(500); // Wait 500ms before starting the next sequence
-}
-
-// Function to show error effect with LEDs flashing
-void showErrorEffect() {
-  // LEDs flashing from 1 to 5
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(100); // LED on for 100ms
-    digitalWrite(ledPins[i], LOW);
-    delay(100); // LED off for 100ms
-  }
-
-  // LEDs flashing from 5 to 1
-  for (int i = 4; i >= 0; i--) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(100); // LED on for 100ms
-    digitalWrite(ledPins[i], LOW);
-    delay(100); // LED off for 100ms
-  }
-  delay(500); // Wait 500ms after the error effect
-}
-
-// Function to turn off all LEDs
-void resetLEDs() {
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], LOW); // Turn off all LEDs
-  }
-}
-
