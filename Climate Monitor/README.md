@@ -1,6 +1,7 @@
 🤖🤖🤖 MEMORY CHALLANGE 🤖🤖🤖
 
-![Terrific Gaaris-Juttuli](https://github.com/user-attachments/assets/fa6106a8-a8ea-4118-b7c7-cf7f8df17631)
+![Terrific Gaaris-Juttu![Smashing Blorr](https://github.com/user-attachments/assets/afd3b583-1180-41c1-aaa7-77e15fbd9421)
+
 
 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
