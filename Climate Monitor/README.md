@@ -1,6 +1,7 @@
 🤖🤖🤖 CLIMATE MONITOR 🤖🤖🤖
 
-[Smashing Blorr](https://github.com/user-attachments/assets/afd3b583-1180-41c1-aaa7-77e15fbd9421)
+
+![Smashing Blorr](https://github.com/user-attachments/assets/a77a469b-6714-43b9-8dc0-ce956c3c80fe)
 
 
 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
