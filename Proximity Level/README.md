@@ -1,165 +1,99 @@
-🤖🤖🤖 MEMORY CHALLANGE 🤖🤖🤖
+🤖🤖🤖 PROXIMITY LEVEL 🤖🤖🤖
 
-![Terrific Gaaris-Juttuli](https://github.com/user-attachments/assets/fa6106a8-a8ea-4118-b7c7-cf7f8df17631)
+![Exquisite Esboo-Fulffy](https://github.com/user-attachments/assets/486b35b1-5e66-471e-b861-9b7d5cc82a16)
 
 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
 
-# Memory Challenge Game - LUMAX LAB
+
+# Proximity Level - LUMAX LAB
 
 ## Description
-This code implements a MEMORY CHALLANGE game with LEDs, buttons, and a buzzer. The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. If the player repeats the sequence correctly, the game progresses to the next level. If the player makes a mistake, the game resets to the first level.
+This code uses an HC-SR04 ultrasonic sensor to measure distances and provides visual feedback via LEDs and audible alerts using a buzzer. The LEDs illuminate progressively based on distance thresholds, and the buzzer sounds when the object is too close.
 
 ## Code
 
 ```cpp
 
 /* 
-   Project: Memory Challenge
-   Developed by: Lumax Lab
-   Description: This code implements a Simon Says game with LEDs, buttons, and a buzzer. 
-   The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. 
-   If the player repeats the sequence correctly, the game progresses to the next level. 
-   If the player makes a mistake, the game resets to the first level.
+   Project: Distance Measurement with LED and Buzzer Indicators
+   Developed by: Alma Creating
+   Description: This code uses an HC-SR04 ultrasonic sensor to measure distance and provides visual and audible feedback. 
+   LEDs are activated based on predefined distance thresholds, with each LED corresponding to a different range of distances. 
+   A buzzer sounds when the measured distance is below a certain threshold, alerting the user when the object is too close. 
 */
 
+#define TRIG_PIN A0
+#define ECHO_PIN A1
+#define BUZZER_PIN 8
 
-#include <Arduino.h>
-
-// Define LED, Button, and Buzzer pins
-const int ledPins[] = {2, 3, 4, 5, 6};     // LED pins
-const int buttonPins[] = {7, 8, 9, 10, 11}; // Button pins
-const int buzzerPin = 12;                  // Buzzer pin
-
-int gameSequence[10];  // Array to store the LED sequence for the game
-int sequenceLength = 1; // Length of the sequence (starts with 1)
-int playerIndex = 0;    // Index for player to compare against
+int leds[] = {2, 3, 4, 5, 6, 7, 11, 12, 13}; // LEDs in order
+int numLeds = sizeof(leds) / sizeof(leds[0]); // Total number of LEDs
+int ledThresholds[] = {30, 26, 22, 19, 16, 13, 10, 8, 6}; // Distance thresholds for each LED
 
 void setup() {
-  // Set LED pins as outputs
-  for (int i = 0; i < 5; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], LOW); // Initialize LEDs to be off
+  Serial.begin(9600);
+
+  // Set up LEDs as output
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(leds[i], OUTPUT);
+    digitalWrite(leds[i], LOW); // Ensure LEDs start off
   }
 
-  // Set button pins as inputs with internal pull-up resistors
-  for (int i = 0; i < 5; i++) {
-    pinMode(buttonPins[i], INPUT_PULLUP);
-  }
+  // Set up sensor and buzzer
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
 
-  pinMode(buzzerPin, OUTPUT);  // Set the buzzer pin as output
-  randomSeed(analogRead(0));   // Initialize random number generator
+  noTone(BUZZER_PIN); // Ensure buzzer is initially off
 }
 
-void loop() {
-  // Start the game with the first sequence
-  if (playerIndex == 0) {
-    generateSequence();        // Generate the LED sequence
-    playSequence();            // Display the sequence to the player
-  }
+// Function to measure distance using the HC-SR04
+float measureDistance() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
 
-  // Wait for the player to press the correct button
-  bool correctButtonPressed = false;
-  while (!correctButtonPressed) {
-    for (int i = 0; i < 5; i++) {
-      if (digitalRead(buttonPins[i]) == LOW) { // Button pressed
-        digitalWrite(ledPins[i], HIGH);        // Turn on the corresponding LED
-        delay(500);                            // Wait for a while
-        digitalWrite(ledPins[i], LOW);         // Turn off the LED
+  long duration = pulseIn(ECHO_PIN, HIGH, 30000); // Timeout of 30 ms
+  if (duration == 0) return -1; // No response from sensor
+  return (duration * 0.034) / 2; // Convert to centimeters
+}
 
-        // Check if the pressed button corresponds to the player's sequence
-        if (gameSequence[playerIndex] == i) {
-          playerIndex++;  // Player got it right, move to the next LED
-
-          if (playerIndex == sequenceLength) {  // If the entire sequence is completed correctly
-            playSuccessTone();   // Play success tone
-            showSuccessEffect(); // Show success effect with LEDs
-            sequenceLength++;    // Increase the sequence length for the next level
-            playerIndex = 0;     // Reset the player's index to restart the sequence
-            delay(2000);          // Wait for 2 seconds before starting the next level
-          }
-          correctButtonPressed = true;  // Correct button was pressed, move to the next LED
-        } else {
-          playErrorTone();     // Play error tone
-          showErrorEffect();   // Show error effect with LEDs flashing
-          sequenceLength = 1;  // Reset sequence length to level 1
-          playerIndex = 0;     // Reset player's index
-          delay(2000);         // Wait for 2 seconds before restarting the game
-          correctButtonPressed = true;  // Stop waiting and restart the game
-        }
-      }
+// Update LEDs based on the distance
+void updateLeds(float distance) {
+  for (int i = 0; i < numLeds; i++) {
+    if (distance <= ledThresholds[i]) {
+      digitalWrite(leds[i], HIGH); // Turn on LED if distance is less than or equal to the threshold
+    } else {
+      digitalWrite(leds[i], LOW); // Turn off LED if distance is greater than the threshold
     }
   }
 }
 
-// Function to generate a random sequence of LEDs
-void generateSequence() {
-  for (int i = 0; i < sequenceLength; i++) {
-    gameSequence[i] = random(0, 5);  // Generate a random number between 0 and 4 (for 5 LEDs)
+// Update buzzer based on the distance
+void updateBuzzer(float distance) {
+  if (distance <= 6) {
+    tone(BUZZER_PIN, 1000); // Activate buzzer with 1000 Hz
+  } else {
+    noTone(BUZZER_PIN); // Turn off the buzzer
   }
 }
 
-// Function to play the LED sequence for the player
-void playSequence() {
-  for (int i = 0; i < sequenceLength; i++) {
-    digitalWrite(ledPins[gameSequence[i]], HIGH);
-    delay(500); // Keep the LED on for 500ms
-    digitalWrite(ledPins[gameSequence[i]], LOW);
-    delay(200); // Wait 200ms between LEDs
-  }
-}
-
-// Function to play the success tone on the buzzer (Access Granted)
-void playSuccessTone() {
-  tone(buzzerPin, 1000, 300); // 1000Hz tone for 300ms (success tone)
-}
-
-// Function to play the error tone on the buzzer (Access Denied)
-void playErrorTone() {
-  // 300Hz tone for 500ms
-  tone(buzzerPin, 300, 500);  
-  delay(500); // Wait for the tone to finish before playing it again
-  
-  // Play the tone again
-  tone(buzzerPin, 300, 500);  
-  delay(500); // Wait for the tone to finish before continuing
-}
-
-// Function to show success effect with LEDs
-void showSuccessEffect() {
-  // Turn on all LEDs
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], HIGH);
-  }
-  delay(500); // Keep LEDs on for 500ms
-  resetLEDs(); // Turn off all LEDs
-  delay(500); // Wait 500ms before starting the next sequence
-}
-
-// Function to show error effect with LEDs flashing
-void showErrorEffect() {
-  // LEDs flashing from 1 to 5
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(100); // LED on for 100ms
-    digitalWrite(ledPins[i], LOW);
-    delay(100); // LED off for 100ms
+void loop() {
+  float distance = measureDistance();
+  if (distance < 0 || distance > 400) {
+    Serial.println("Invalid measurement.");
+    return;
   }
 
-  // LEDs flashing from 5 to 1
-  for (int i = 4; i >= 0; i--) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(100); // LED on for 100ms
-    digitalWrite(ledPins[i], LOW);
-    delay(100); // LED off for 100ms
-  }
-  delay(500); // Wait 500ms after the error effect
-}
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
 
-// Function to turn off all LEDs
-void resetLEDs() {
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], LOW); // Turn off all LEDs
-  }
-}
+  updateLeds(distance); // Update LEDs based on the distance
+  updateBuzzer(distance); // Update buzzer based on the distance
 
+  delay(100); // Small delay for stability
+}
