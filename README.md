@@ -72,7 +72,7 @@ If you like what I do and want to support my projects, you can:
 
 ## 📈 GitHub Stats
 
-![Lumax Lab's GitHub stats](https://github-readme-stats.vercel.app/api?username=LumaxLab&show_icons=true&theme=radical)
+![Lumax Lab's GitHub stats](https://github-readme-stats.vercel.app/api?username=Lumax980&show_icons=true&theme=radical)
 
 ---
 
