@@ -12,8 +12,9 @@ This code implements a MEMORY CHALLANGE game with LEDs, buttons, and a buzzer. T
 
 ## Code Arduino
 
-```cpp
 
+
+```cpp
 /* 
    Project: Ultrasonic Radar
    Developed by: Lumax Lab
@@ -96,6 +97,7 @@ int calculateDistance() {
 
   return distance; // Return the calculated distance
 }
+```
 
 ```java
 /* 
