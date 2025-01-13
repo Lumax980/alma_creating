@@ -7,11 +7,30 @@
 
 # UltraSonic Radar - LUMAX LAB
 
+## Bill of Materials (BoM)
+
+| **Component**          | **Quantity** | **Description**                          |
+|-------------------------|--------------|------------------------------------------|
+| Arduino Uno            | 1            | Microcontroller board for controlling the system. |
+| Ultrasonic Sensor (HC-SR04) | 1        | Measures distances using ultrasonic waves. |
+| Servo Motor (SG90)     | 1            | Rotates to sweep the radar area.         |
+| Breadboard             | 1            | For easy prototyping and wiring.         |
+| Jumper Wires           | ~10          | Connect components on the breadboard.    |
+| USB Cable              | 1            | For powering the Arduino Uno and uploading code. |
+
+### Notes
+- Ensure proper power supply to the Arduino Uno via USB or external power.
+- Double-check connections for the ultrasonic sensor and servo motor to avoid damage.
+
+
 ## Description
-This code implements a MEMORY CHALLANGE game with LEDs, buttons, and a buzzer. The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. If the player repeats the sequence correctly, the game progresses to the next level. If the player makes a mistake, the game resets to the first level.
+
+This code implements an ultrasonic radar using a servo motor and an ultrasonic sensor.
+   The servo motor rotates to sweep an area, while the ultrasonic sensor measures distances. 
+   The data is transmitted via the Serial Monitor, showing the angle and distance for each sweep.
+   Ideal for detecting obstacles and visualizing the environment using Processing or other software.
 
 ## Code Arduino
-
 
 
 ```cpp
@@ -98,7 +117,14 @@ int calculateDistance() {
   return distance; // Return the calculated distance
 }
 ```
+![Captura de ecrã 2025-01-13 143827](https://github.com/user-attachments/assets/37920169-c8aa-4f28-a787-4c30aef0882b)
 
+## Description 
+This Processing code receives angle and distance data from an Arduino-based radar system
+   via the serial port. It visualizes the radar scanning process and detected objects on a simulated screen.
+   The radar rotates and displays the object's position based on the angle and distance.
+
+## Code Processing 4
 ```java
 /* 
    Project: Radar Visualization using Ultrasonic Sensor
