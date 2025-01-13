@@ -16,7 +16,7 @@ Hello! 👋 I'm **Lumax Lab**, a robotics enthusiast, engineer, and content crea
 
 ## 🛠️ Featured Projects
 
-### 1. **https://github.com/Lumax980/Project/blob/main/Proximity%20Level/README.md**
+### 1. **[Proximity Level](https://github.com/Lumax980/Project/blob/main/Proximity%20Level/README.md)**
 A versatile robotic arm controller that can be programmed for a variety of tasks.
 
 - 🧠 AI-powered gesture recognition
