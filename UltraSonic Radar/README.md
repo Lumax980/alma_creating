@@ -2,8 +2,6 @@
 
 ![Ingenious Bojo-Borwo](https://github.com/user-attachments/assets/01b96ca6-ad5b-40cd-8c3a-5b0dea3fc6eb)
 
-🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
-
 
 # UltraSonic Radar - LUMAX LAB
 
@@ -22,6 +20,7 @@
 - Ensure proper power supply to the Arduino Uno via USB or external power.
 - Double-check connections for the ultrasonic sensor and servo motor to avoid damage.
 
+🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
 ## Description
 
