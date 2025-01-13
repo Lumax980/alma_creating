@@ -1,165 +1,286 @@
-🤖🤖🤖 MEMORY CHALLANGE 🤖🤖🤖
+🤖🤖🤖 ULTRASONIC RADAR 🤖🤖🤖
 
-![Terrific Gaaris-Juttuli](https://github.com/user-attachments/assets/fa6106a8-a8ea-4118-b7c7-cf7f8df17631)
+![Ingenious Bojo-Borwo](https://github.com/user-attachments/assets/01b96ca6-ad5b-40cd-8c3a-5b0dea3fc6eb)
 
 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
 
-# Memory Challenge Game - LUMAX LAB
+# UltraSonic Radar - LUMAX LAB
 
 ## Description
 This code implements a MEMORY CHALLANGE game with LEDs, buttons, and a buzzer. The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. If the player repeats the sequence correctly, the game progresses to the next level. If the player makes a mistake, the game resets to the first level.
 
-## Code
+## Code Arduino
 
 ```cpp
 
 /* 
-   Project: Memory Challenge
+   Project: Ultrasonic Radar
    Developed by: Lumax Lab
-   Description: This code implements a Simon Says game with LEDs, buttons, and a buzzer. 
-   The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. 
-   If the player repeats the sequence correctly, the game progresses to the next level. 
-   If the player makes a mistake, the game resets to the first level.
+   Description: This code implements an ultrasonic radar using a servo motor and an ultrasonic sensor.
+   The servo motor rotates to sweep an area, while the ultrasonic sensor measures distances. 
+   The data is transmitted via the Serial Monitor, showing the angle and distance for each sweep.
+   Ideal for detecting obstacles and visualizing the environment using Processing or other software.
 */
 
+#include <Servo.h> // Includes the Servo library
 
-#include <Arduino.h>
+// Define pins for the Ultrasonic Sensor
+const int trigPin = 10; // Pin for triggering the ultrasonic pulse YEWLLOW
+const int echoPin = 11; // Pin for receiving the echo pulse
 
-// Define LED, Button, and Buzzer pins
-const int ledPins[] = {2, 3, 4, 5, 6};     // LED pins
-const int buttonPins[] = {7, 8, 9, 10, 11}; // Button pins
-const int buzzerPin = 12;                  // Buzzer pin
+// Variables for the duration and the calculated distance
+long duration;
+int distance;
 
-int gameSequence[10];  // Array to store the LED sequence for the game
-int sequenceLength = 1; // Length of the sequence (starts with 1)
-int playerIndex = 0;    // Index for player to compare against
+// Create a Servo object to control the servo motor
+Servo myServo;
 
 void setup() {
-  // Set LED pins as outputs
-  for (int i = 0; i < 5; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], LOW); // Initialize LEDs to be off
-  }
+  // Initialize pins for ultrasonic sensor
+  pinMode(trigPin, OUTPUT); // Set the trigPin as an output
+  pinMode(echoPin, INPUT);  // Set the echoPin as an input
 
-  // Set button pins as inputs with internal pull-up resistors
-  for (int i = 0; i < 5; i++) {
-    pinMode(buttonPins[i], INPUT_PULLUP);
-  }
+  // Initialize Serial communication for debugging and data transmission
+  Serial.begin(9600);
 
-  pinMode(buzzerPin, OUTPUT);  // Set the buzzer pin as output
-  randomSeed(analogRead(0));   // Initialize random number generator
+  // Attach the servo motor to pin 12
+  myServo.attach(13);
+
+  // Initial message in Serial Monitor
+  Serial.println("Ultrasonic Radar Initialized");
 }
 
 void loop() {
-  // Start the game with the first sequence
-  if (playerIndex == 0) {
-    generateSequence();        // Generate the LED sequence
-    playSequence();            // Display the sequence to the player
+  // Sweep the servo motor from 15 to 165 degrees
+  for (int angle = 15; angle <= 165; angle++) {
+    myServo.write(angle);          // Move the servo to the current angle
+    delay(30);                     // Wait for the servo to reach the position
+    distance = calculateDistance();// Measure the distance at the current angle
+
+    // Send the data to the Serial Monitor
+    Serial.print(angle);  // Send the angle
+    Serial.print(",");    // Separator for data indexing
+    Serial.print(distance); // Send the distance
+    Serial.print(".");    // Separator for data indexing
   }
 
-  // Wait for the player to press the correct button
-  bool correctButtonPressed = false;
-  while (!correctButtonPressed) {
-    for (int i = 0; i < 5; i++) {
-      if (digitalRead(buttonPins[i]) == LOW) { // Button pressed
-        digitalWrite(ledPins[i], HIGH);        // Turn on the corresponding LED
-        delay(500);                            // Wait for a while
-        digitalWrite(ledPins[i], LOW);         // Turn off the LED
+  // Sweep the servo motor back from 165 to 15 degrees
+  for (int angle = 165; angle >= 15; angle--) {
+    myServo.write(angle);          // Move the servo to the current angle
+    delay(30);                     // Wait for the servo to reach the position
+    distance = calculateDistance(); // Measure the distance at the current angle
 
-        // Check if the pressed button corresponds to the player's sequence
-        if (gameSequence[playerIndex] == i) {
-          playerIndex++;  // Player got it right, move to the next LED
-
-          if (playerIndex == sequenceLength) {  // If the entire sequence is completed correctly
-            playSuccessTone();   // Play success tone
-            showSuccessEffect(); // Show success effect with LEDs
-            sequenceLength++;    // Increase the sequence length for the next level
-            playerIndex = 0;     // Reset the player's index to restart the sequence
-            delay(2000);          // Wait for 2 seconds before starting the next level
-          }
-          correctButtonPressed = true;  // Correct button was pressed, move to the next LED
-        } else {
-          playErrorTone();     // Play error tone
-          showErrorEffect();   // Show error effect with LEDs flashing
-          sequenceLength = 1;  // Reset sequence length to level 1
-          playerIndex = 0;     // Reset player's index
-          delay(2000);         // Wait for 2 seconds before restarting the game
-          correctButtonPressed = true;  // Stop waiting and restart the game
-        }
-      }
-    }
+    // Send the data to the Serial Monitor
+    Serial.print(angle);  // Send the angle
+    Serial.print(",");    // Separator for data indexing
+    Serial.print(distance); // Send the distance
+    Serial.print(".");    // Separator for data indexing
   }
 }
 
-// Function to generate a random sequence of LEDs
-void generateSequence() {
-  for (int i = 0; i < sequenceLength; i++) {
-    gameSequence[i] = random(0, 5);  // Generate a random number between 0 and 4 (for 5 LEDs)
-  }
+// Function to calculate the distance using the ultrasonic sensor
+int calculateDistance() {
+  // Send a 10-microsecond pulse to trigger the ultrasonic sensor
+  digitalWrite(trigPin, LOW); 
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(15);
+  digitalWrite(trigPin, LOW);
+
+  // Measure the time of the echo pulse in microseconds
+  duration = pulseIn(echoPin, HIGH);
+
+  // Calculate the distance in centimeters (speed of sound = 343 m/s)
+  distance = duration * 0.034 / 2;
+
+  return distance; // Return the calculated distance
 }
 
-// Function to play the LED sequence for the player
-void playSequence() {
-  for (int i = 0; i < sequenceLength; i++) {
-    digitalWrite(ledPins[gameSequence[i]], HIGH);
-    delay(500); // Keep the LED on for 500ms
-    digitalWrite(ledPins[gameSequence[i]], LOW);
-    delay(200); // Wait 200ms between LEDs
-  }
+```java
+/* 
+   Project: Radar Visualization using Ultrasonic Sensor
+   Developed by: Lumax Lab
+   Description: This Processing code receives angle and distance data from an Arduino-based radar system
+   via the serial port. It visualizes the radar scanning process and detected objects on a simulated screen.
+   The radar rotates and displays the object's position based on the angle and distance.
+*/
+
+import processing.serial.*; // Library for serial communication
+import java.awt.event.KeyEvent; // Library for reading key events
+import java.io.IOException; // Library for handling input/output exceptions
+
+// Serial communication setup
+Serial myPort; // Defines the Serial object for communication
+
+// Variables for radar data
+String angle = "";       // Stores the angle data as a string
+String distance = "";    // Stores the distance data as a string
+String data = "";        // Stores the full received data string
+String noObject;          // Message for indicating object detection status
+float pixsDistance;       // Converts distance from cm to pixels
+int iAngle, iDistance;    // Stores angle and distance as integers
+int index1 = 0, index2 = 0; // Indexes for parsing received data
+
+// Font variable for displaying text (optional, not used in this code)
+PFont orcFont;
+
+void setup() {
+  /*
+     Initializes the Processing window and serial communication
+  */
+  size(1200, 700); // Sets the window size (adjust based on screen resolution)
+  smooth();        // Enables anti-aliasing for better visuals
+
+  // Sets up the serial communication with the Arduino
+  myPort = new Serial(this, "COM9", 9600); // Replace "COM9" with your serial port
+  myPort.bufferUntil('.'); // Reads data until the "." character
 }
 
-// Function to play the success tone on the buzzer (Access Granted)
-void playSuccessTone() {
-  tone(buzzerPin, 1000, 300); // 1000Hz tone for 300ms (success tone)
+void draw() {
+  /*
+     Main loop for rendering the radar visualization
+  */
+  fill(98, 245, 31); // Green color for radar visuals
+
+  // Creates a motion blur effect
+  noStroke();
+  fill(0, 4); 
+  rect(0, 0, width, height - height * 0.065);
+
+  fill(98, 245, 31); // Green color for radar visuals 
+
+  // Calls functions to render radar components
+  drawRadar();   // Draws the radar structure
+  drawLine();    // Draws the scanning line
+  drawObject();  // Draws the detected object
+  drawText();    // Displays information on the screen
 }
 
-// Function to play the error tone on the buzzer (Access Denied)
-void playErrorTone() {
-  // 300Hz tone for 500ms
-  tone(buzzerPin, 300, 500);  
-  delay(500); // Wait for the tone to finish before playing it again
-  
-  // Play the tone again
-  tone(buzzerPin, 300, 500);  
-  delay(500); // Wait for the tone to finish before continuing
+void serialEvent(Serial myPort) {
+  /*
+     Event handler for incoming serial data
+     Parses angle and distance data from the serial port
+  */
+
+  // Reads the data from the serial port until the "." character
+  data = myPort.readStringUntil('.');
+  data = data.substring(0, data.length() - 1); // Removes the trailing "."
+
+  // Extracts angle and distance values from the received data
+  index1 = data.indexOf(","); // Finds the position of the "," separator
+  angle = data.substring(0, index1); // Extracts the angle value
+  distance = data.substring(index1 + 1, data.length()); // Extracts the distance value
+
+  // Converts the string values to integers
+  iAngle = int(angle);
+  iDistance = int(distance);
 }
 
-// Function to show success effect with LEDs
-void showSuccessEffect() {
-  // Turn on all LEDs
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], HIGH);
+void drawRadar() {
+  /*
+     Draws the radar structure, including the arcs and angle lines
+  */
+  pushMatrix();
+  translate(width / 2, height - height * 0.074); // Sets the radar's position
+
+  noFill();
+  strokeWeight(2);
+  stroke(98, 245, 31); // Green color for the radar lines
+
+  // Draws concentric arcs representing distance ranges
+  arc(0, 0, (width - width * 0.0625), (width - width * 0.0625), PI, TWO_PI);
+  arc(0, 0, (width - width * 0.27), (width - width * 0.27), PI, TWO_PI);
+  arc(0, 0, (width - width * 0.479), (width - width * 0.479), PI, TWO_PI);
+  arc(0, 0, (width - width * 0.687), (width - width * 0.687), PI, TWO_PI);
+
+  // Draws radial lines for angle markers
+  line(-width / 2, 0, width / 2, 0);
+  for (int angle = 30; angle <= 150; angle += 30) {
+    line(0, 0, (-width / 2) * cos(radians(angle)), (-width / 2) * sin(radians(angle)));
   }
-  delay(500); // Keep LEDs on for 500ms
-  resetLEDs(); // Turn off all LEDs
-  delay(500); // Wait 500ms before starting the next sequence
+
+  popMatrix();
 }
 
-// Function to show error effect with LEDs flashing
-void showErrorEffect() {
-  // LEDs flashing from 1 to 5
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(100); // LED on for 100ms
-    digitalWrite(ledPins[i], LOW);
-    delay(100); // LED off for 100ms
+void drawObject() {
+  /*
+     Draws the detected object based on the angle and distance data
+  */
+  pushMatrix();
+  translate(width / 2, height - height * 0.074); // Sets the radar's position
+  strokeWeight(9);
+  stroke(255, 10, 10); // Red color for detected objects
+
+  // Converts the distance from cm to pixels
+  pixsDistance = iDistance * ((height - height * 0.1666) * 0.025);
+
+  // Limits the detection range to 40 cm
+  if (iDistance < 40) {
+    // Draws the object based on its angle and distance
+    line(pixsDistance * cos(radians(iAngle)), -pixsDistance * sin(radians(iAngle)), 
+         (width - width * 0.505) * cos(radians(iAngle)), -(width - width * 0.505) * sin(radians(iAngle)));
   }
 
-  // LEDs flashing from 5 to 1
-  for (int i = 4; i >= 0; i--) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(100); // LED on for 100ms
-    digitalWrite(ledPins[i], LOW);
-    delay(100); // LED off for 100ms
-  }
-  delay(500); // Wait 500ms after the error effect
+  popMatrix();
 }
 
-// Function to turn off all LEDs
-void resetLEDs() {
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(ledPins[i], LOW); // Turn off all LEDs
+void drawLine() {
+  /*
+     Draws the radar's scanning line based on the current angle
+  */
+  pushMatrix();
+  strokeWeight(9);
+  stroke(30, 250, 60); // Green scanning line
+
+  translate(width / 2, height - height * 0.074); // Sets the radar's position
+  line(0, 0, (height - height * 0.12) * cos(radians(iAngle)), -(height - height * 0.12) * sin(radians(iAngle)));
+
+  popMatrix();
+}
+
+void drawText() {
+  /*
+     Displays angle, distance, and range information on the screen
+  */
+  pushMatrix();
+
+  // Determines if the object is within range
+  noObject = (iDistance > 40) ? "Out of Range" : "In Range";
+
+  // Draws a black rectangle as a background for the text
+  fill(0, 0, 0);
+  noStroke();
+  rect(0, height - height * 0.0648, width, height);
+
+  // Displays the radar data
+  fill(98, 245, 31); // Green text
+  textSize(25);
+  text("10cm", width - width * 0.3854, height - height * 0.0833);
+  text("20cm", width - width * 0.281, height - height * 0.0833);
+  text("30cm", width - width * 0.177, height - height * 0.0833);
+  text("40cm", width - width * 0.0729, height - height * 0.0833);
+  textSize(40);
+  text("Lumax Lab", width - width * 0.875, height - height * 0.0277);
+  text("Angle: " + iAngle + " °", width - width * 0.48, height - height * 0.0277);
+  text("Distance: ", width - width * 0.26, height - height * 0.0277);
+  if (iDistance < 40) {
+    text("        " + iDistance + " cm", width - width * 0.225, height - height * 0.0277);
   }
+
+  // Displays the angle markers
+  textSize(25);
+  fill(98, 245, 60); // Light green text
+  for (int angle = 30; angle <= 150; angle += 30) {
+    float x = (width - width * 0.5) + width / 2 * cos(radians(angle));
+    float y = (height - height * 0.09) - width / 2 * sin(radians(angle));
+    pushMatrix();
+    translate(x, y);
+    rotate(-radians(90 - angle));
+    text(angle + "°", 0, 0);
+    popMatrix();
+  }
+
+  popMatrix();
 }
 
