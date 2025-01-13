@@ -17,33 +17,33 @@ Hello! 👋 I'm **Lumax Lab**, a robotics enthusiast, engineer, and content crea
 ## 🛠️ Featured Projects
 
 ### 1. **[Proximity Level](https://github.com/Lumax980/Project/blob/main/Proximity%20Level/README.md)**
-A versatile robotic arm controller that can be programmed for a variety of tasks.
+An ultrasonic radar system for detection and distance measurement.
 
-- 🧠 AI-powered gesture recognition
-- 🎮 Controller support for ease of use
-- 📚 Fully documented for DIY enthusiasts
+- 🔊 Precise measurement: Capable of measuring distances with high accuracy.
+- 📡 Ultrasonic radar technology: Uses sound waves to detect objects and obstacles.
+- 🖥 Real-time monitoring: View data in real-time via an app or control panel.
 
-### 2. **[Autonomous Rover](https://github.com/LumaxLab/Autonomous-Rover)**
+### 2. **[UltraSonic Radar](https://github.com/Lumax980/Project/blob/main/UltraSonic%20Radar/README.md)**
 An autonomous vehicle capable of navigating complex terrains.
 
-- 🌍 GPS-based pathfinding
-- 🤖 Obstacle detection using LIDAR
-- 🛠 Modular design for easy upgrades
+- 🚶‍♂️ Proximity sensors: Detects the presence of objects or people within a specific area.
+- 🏅 Adjustable alert levels: Allows setting proximity thresholds as needed.
+- 💡 Device integration: Triggers devices or systems when proximity is detected.
 
-### 3. **[Hexapod Bot](https://github.com/LumaxLab/Hexapod-Bot)**
-A six-legged robot that mimics insect movements.
+### 3. **[Memory Challenge](https://github.com/Lumax980/Project/blob/main/MemoryChallenge/README.md)**
+A game or system designed to test and improve memory.
 
-- 🦿 Smooth walking algorithms
-- 🎨 Customizable designs
-- 🖥 Real-time monitoring via app
-
+- 🧠 Memory exercises: Games and activities to train and enhance memory.
+- 🎮 Progressive levels: Challenges that increase in difficulty as progress is made.
+- 🏆 Performance tracking: Monitors performance and provides feedback for continuous improvement.
 ---
 
 ## 🎥 My YouTube Channel
 
-![YouTube Banner](https://via.placeholder.com/800x200?text=Subscribe+to+Lumax+Lab!)
+![YouTube Banner](https://github.com/user-attachments/assets/50baf2cf-723e-4fc0-b8c3-2ea02093e935)
 
-Explore robotics like never before on my [YouTube channel](https://www.youtube.com/channel/yourchannel).
+
+Explore robotics like never before on my [YouTube channel]([https://www.youtube.com/channel/yourchannel](https://www.youtube.com/@lumaxlab)).
 
 - 📹 Project walkthroughs
 - 🔧 Tutorials and guides
@@ -55,9 +55,9 @@ Explore robotics like never before on my [YouTube channel](https://www.youtube.c
 
 I'm always looking for like-minded creators, engineers, and enthusiasts to join forces. If you're interested in collaborating or just want to chat about robotics, feel free to reach out:
 
-- 📧 Email: [lumax.lab@example.com](mailto:lumax.lab@example.com)
-- 🌐 [LinkedIn](https://www.linkedin.com/in/lumaxlab)
-- 🐦 [Twitter](https://twitter.com/lumaxlab)
+- 📧 Email: [lumax.lab@example.com](mailto:lucascruz980@gmail.com)
+- 🌐 [Instagram]([https://www.linkedin.com/in/lumaxlab](https://www.instagram.com/lumaxlab/))
+- 🐦 [Youtube]([https://www.youtube.com/channel/yourchannel](https://www.youtube.com/@lumaxlab))
 
 ---
 
@@ -66,7 +66,6 @@ I'm always looking for like-minded creators, engineers, and enthusiasts to join 
 If you like what I do and want to support my projects, you can:
 
 - ⭐ Star my repositories
-- ☕ [Buy me a coffee](https://www.buymeacoffee.com/lumaxlab)
 - 📢 Share my content
 
 ---
