@@ -1,92 +1,164 @@
-🤖🤖🤖 CLIMATE MONITOR 🤖🤖🤖
+⛽📊🔍 GAS LEVEL MONIROTING SYSTEM ⛽📊🔍
 
 
-![Smashing Blorr](https://github.com/user-attachments/assets/a77a469b-6714-43b9-8dc0-ce956c3c80fe)
+![Imagem WhatsApp 2025-01-21 às 13 51 28_e9fdb454](https://github.com/user-attachments/assets/ab544dd3-7f02-4eaa-8b5e-724d7910a12b)
 
 
 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
 
-# Climate Monitor - LUMAX LAB
+# Gas Level Monitoring Systemr - LUMAX LAB
 
 ## Description
-This code implements a system to measure and display temperature and humidity values using the DHT11 sensor and an I2C-controlled LCD. The measurements are continuously taken and displayed on both the LCD and the Serial Monitor. If there's an error reading the sensor, an error message will appear on the LCD and the Serial Monitor.
+/**
+ * Project: Gas Level Monitoring System
+ * Developed by: Lumax Lab
+ * This program runs on an ESP32 microcontroller and is designed to monitor gas levels using an MQ2 sensor. 
+ * It uses a web interface to display real-time gas concentration in ppm (parts per million) and triggers
+ * visual (LED) and audio (buzzer) alerts when the gas level exceeds a predefined threshold.
+ * 
+ * Features:
+ * - Wi-Fi Access Point for web-based monitoring.
+ * - Real-time gas data visualization with a dynamic gauge.
+ * - Alerts via LEDs and a buzzer when gas levels are high.
+ * - JSON endpoint to provide gas data for web applications.
+ */
 
 ## Code
 
 ```cpp
 
-/* 
-   Project: Temperature and Humidity Display with DHT11 and I2C LCD
-   Developed by: Lumax Lab
-   Description: This code reads temperature and humidity data from the DHT11 sensor and displays them on an I2C LCD.
-   The data is also sent to the Serial Monitor for debugging purposes.
-*/
 
-#include <Wire.h>               // Library for I2C communication
-#include <LiquidCrystal_I2C.h>  // Library for controlling LCD with I2C
-#include <DHT.h>                // Library for the DHT sensor
+/**
+ * Project: Gas Level Monitoring System
+ * Developed by: Lumax Lab
+ * This program runs on an ESP32 microcontroller and is designed to monitor gas levels using an MQ2 sensor. 
+ * It uses a web interface to display real-time gas concentration in ppm (parts per million) and triggers
+ * visual (LED) and audio (buzzer) alerts when the gas level exceeds a predefined threshold.
+ * 
+ * Features:
+ * - Wi-Fi Access Point for web-based monitoring.
+ * - Real-time gas data visualization with a dynamic gauge.
+ * - Alerts via LEDs and a buzzer when gas levels are high.
+ * - JSON endpoint to provide gas data for web applications.
+ */
 
-// I2C LCD configuration
-#define LCD_ADDRESS 0x27        // I2C address of the LCD (0x27 is the most common; adjust if necessary)
-#define LCD_COLUMNS 16          // Number of columns on the LCD
-#define LCD_ROWS 2              // Number of rows on the LCD
-LiquidCrystal_I2C lcd(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS); // Initialize the LCD
+#include <WiFi.h>
+#include <WebServer.h>
 
-// DHT11 sensor configuration
-#define DHTPIN 3                // Pin where the DHT11 is connected
-#define DHTTYPE DHT11           // Type of DHT sensor
-DHT dht(DHTPIN, DHTTYPE);       // Initialize the DHT object
+#define AO_PIN A0        // ESP32's pin GPIO36 connected to AO pin of the MQ2 sensor
+#define BUZZER_PIN D2    // GPIO 4 connected to the passive buzzer
+#define LED_RED D9       // GPIO 9 connected to red LED
+#define LED_GREEN D3     // GPIO 3 connected to green LED
+
+WebServer server(80);   // Create a web server instance
+
+// Wi-Fi credentials
+const char *ssid = "LumaxLab";
+const char *password = "lumaxlab";
 
 void setup() {
-  // Serial Monitor initialization
+  // Initialize serial communication for debugging
   Serial.begin(9600);
-  Serial.println("Initiating DHT11 and LCD I2C...");
 
-  // LCD initialization
-  lcd.init();             // Initialize the LCD
-  lcd.backlight();        // Turn on the LCD backlight
-  lcd.print("Initiating"); // Initial message on the LCD
-  delay(2000);            // Wait for 2 seconds
+  // Set the ADC attenuation to 11 dB (up to ~3.3V input)
+  analogSetAttenuation(ADC_11db);
 
-  // DHT sensor initialization
-  dht.begin();
+  // Configure GPIO pins
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+
+  // Initialize Wi-Fi in Access Point mode
+  WiFi.softAP(ssid, password);
+  Serial.println("Wi-Fi AP started.");
+  Serial.print("Access the web page at: ");
+  Serial.println(WiFi.softAPIP());
+
+  // Set up the web server routes
+  server.on("/", handleRoot);      // Root route for the homepage
+  server.on("/gas", HTTP_GET, handleGasData);  // Route to provide gas data in JSON format
+  server.begin();
+
+  // Sensor warm-up period
+  Serial.println("Warming up the MQ2 sensor...");
+  delay(1000);  // Wait for the MQ2 sensor to stabilize
 }
 
 void loop() {
-  // Read humidity and temperature data from the DHT sensor
-  float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature();
+  int gasValue = analogRead(AO_PIN); // Read gas sensor value
+  Serial.println("Gas Value: " + String(gasValue) + " ppm");
 
-  // Check if the sensor reading is valid
-  if (isnan(humidity) || isnan(temperature)) {
-    lcd.clear();
-    lcd.print("Sensor error");  // Display error message on the LCD
-    Serial.println("Error: Failed to read from DHT11 sensor."); // Log to Serial Monitor
-    delay(2000);
-    return;
+  // Check if the gas value exceeds the safety threshold
+  if (gasValue > 1700) {
+    tone(BUZZER_PIN, 1000);          // Activate buzzer
+    digitalWrite(LED_RED, HIGH);    // Turn on red LED
+    digitalWrite(LED_GREEN, LOW);   // Turn off green LED
+  } else {
+    noTone(BUZZER_PIN);             // Deactivate buzzer
+    digitalWrite(LED_RED, LOW);     // Turn off red LED
+    digitalWrite(LED_GREEN, HIGH);  // Turn on green LED
   }
 
-  // Display data on the LCD
-  lcd.clear();  // Clear the LCD screen
-  lcd.setCursor(0, 0);  // Set the cursor to the first line
-  lcd.print("Temp: ");  // Display "Temp: "
-  lcd.print(temperature);  // Display the temperature value
-  lcd.print(" C");  // Display "C"
+  // Handle web server requests
+  server.handleClient();
 
-  lcd.setCursor(0, 1);  // Set the cursor to the second line
-  lcd.print("Humi: ");  // Display "Humi: "
-  lcd.print(humidity);  // Display the humidity value
-  lcd.print(" %");  // Display "%"
+  delay(100);  // Small delay for stability
+}
 
-  // Send data to the Serial Monitor
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.println(" C");
+// Function to handle the root web page
+void handleRoot() {
+  String html = "<!DOCTYPE html>"
+                "<html lang='en'>"
+                "<head>"
+                "<meta charset='UTF-8'>"
+                "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                "<title>LumaxLab Gas Monitor</title>"
+                "<style>"
+                "body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f0f0; color: #333; margin: 0; padding: 0; }"
+                "h1 { color: #2258E0; margin-top: 20px; }"
+                ".gauge-container { margin: 40px auto; width: 300px; height: 300px; position: relative; }"
+                ".gauge { width: 300px; height: 300px; border-radius: 50%; background: conic-gradient(green 0% 50%, yellow 50% 80%, red 80% 100%); transform: rotate(-90deg); position: relative; }"
+                ".gauge-overlay { width: 280px; height: 280px; border-radius: 50%; background: #f0f0f0; position: absolute; top: 10px; left: 10px; }"
+                ".gauge-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; font-weight: bold; color: #333; }"
+                "footer { margin-top: 20px; font-size: 14px; color: #777; }"
+                "</style>"
+                "<script>"
+                "function updateGauge() {"
+                "  fetch('/gas')"
+                "    .then(response => response.json())"
+                "    .then(data => {"
+                "      const gauge = document.querySelector('.gauge');"
+                "      const gasValue = data.gas;"
+                "      const percent = Math.min(Math.max(gasValue / 1700 * 100, 0), 100);"
+                "      gauge.style.background = `conic-gradient(green 0% ${percent}%, yellow ${percent}% 80%, red 80% 100%)`;"
+                "      document.querySelector('.gauge-text').innerText = gasValue + ' ppm';"
+                "    })"
+                "    .catch(err => console.error('Error fetching gas data:', err));"
+                "} "
+                "setInterval(updateGauge, 1000);"
+                "</script>"
+                "</head>"
+                "<body>"
+                "<h1>LumaxLab Gas Sensor</h1>"
+                "<div class='gauge-container'>"
+                "  <div class='gauge'></div>"
+                "  <div class='gauge-overlay'></div>"
+                "  <div class='gauge-text'>0 ppm</div>"
+                "</div>"
+                "<footer>Powered by LumaxLab</footer>"
+                "</body>"
+                "</html>";
 
-  Serial.print("Humidity: ");
-  Serial.print(humidity);
-  Serial.println(" %");
+  server.send(200, "text/html", html);
+}
 
-  delay(2000);  // Wait for 2 seconds before updating
+// Function to provide gas data in JSON format
+void handleGasData() {
+  int gasValue = analogRead(AO_PIN);  // Read the gas sensor value
+  Serial.println("Gas Value Sent to Web: " + String(gasValue)); // Debugging output
+
+  // Create and send a JSON response with the gas value
+  String json = "{\"gas\": \"" + String(gasValue) + "\"}";
+  server.send(200, "application/json", json);
 }
