@@ -7,6 +7,8 @@
 
 # Memory Challenge Game - LUMAX LAB
 
+VIDEO 🎥📹🎬: https://www.instagram.com/p/DENu2Xgtd1j/
+
 ## Description
 This code implements a MEMORY CHALLANGE game with LEDs, buttons, and a buzzer. The game shows a sequence of lights that the player must repeat by pressing the corresponding buttons. If the player repeats the sequence correctly, the game progresses to the next level. If the player makes a mistake, the game resets to the first level.
 
