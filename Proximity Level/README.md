@@ -8,6 +8,8 @@
 
 # Proximity Level - LUMAX LAB
 
+VIDEO 🎥📹🎬: https://www.instagram.com/p/DEfqT6ztJGD/
+
 ## Description
 This code uses an HC-SR04 ultrasonic sensor to measure distances and provides visual feedback via LEDs and audible alerts using a buzzer. The LEDs illuminate progressively based on distance thresholds, and the buzzer sounds when the object is too close.
 
