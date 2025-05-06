@@ -5,6 +5,8 @@
 
 # UltraSonic Radar - LUMAX LAB
 
+VIDEO 🎥📹🎬: https://www.youtube.com/watch?v=reKcz96L2XI
+
 ## Bill of Materials (BoM)
 
 | **Component**          | **Quantity** | **Description**                          |
