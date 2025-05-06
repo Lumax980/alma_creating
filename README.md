@@ -43,7 +43,7 @@ A game or system designed to test and improve memory.
 ![YouTube Banner](https://github.com/user-attachments/assets/50baf2cf-723e-4fc0-b8c3-2ea02093e935)
 
 
-Explore robotics like never before on my [YouTube channel] youtube.com/@lumaxlab or instagram.com/lumaxlab/
+Explore robotics like never before on my [YouTube channel] www.youtube.com/@lumaxlab or www.instagram.com/lumaxlab/
 
 - 📹 Project walkthroughs
 - 🔧 Tutorials and guides
