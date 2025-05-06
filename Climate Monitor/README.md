@@ -9,6 +9,8 @@
 
 # Climate Monitor - LUMAX LAB
 
+VIDEO 🎥📹🎬: https://www.instagram.com/p/DEqZ6R6N2ph/
+
 ## Description
 This code implements a system to measure and display temperature and humidity values using the DHT11 sensor and an I2C-controlled LCD. The measurements are continuously taken and displayed on both the LCD and the Serial Monitor. If there's an error reading the sensor, an error message will appear on the LCD and the Serial Monitor.
 
