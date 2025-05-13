@@ -11,7 +11,7 @@
 
 # RFID Access Control System - LUMAX LAB
 
-VIDEO 🎥📹🎬: [https://www.instagram.com/p/DEqZ6R6N2ph/](https://www.instagram.com/p/DFGLEUztOCW/) ????????????????
+VIDEO 🎥📹🎬: https://www.instagram.com/lumaxlab/reel/DJmth0HtZQe/
 
 ## Description
 
