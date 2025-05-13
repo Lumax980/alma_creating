@@ -1,10 +1,11 @@
 🔐📲💡 RFID ACCESS CONTROL SYSTEM 🔐📲💡
 
-![alt text](<Imagem WhatsApp 2025-05-12 às 16.54.09_c9fd0955-1.jpg>)
+![Imagem WhatsApp 2025-05-12 às 16 54 09_c9fd0955](https://github.com/user-attachments/assets/fe696ad3-bd20-45a7-ac2f-37f4ea6e9f75)
 
-![alt text](circuit_rfid_acess-1.png)
+![circuit_rfid_acess](https://github.com/user-attachments/assets/4fa3d811-d10a-4d77-97d0-b3fe312c8b6f)
 
-![alt text](serial-1.png)
+![serial](https://github.com/user-attachments/assets/64e7956f-6c6e-4563-8bd9-9fa90035468a)
+
 
 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
