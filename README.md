@@ -40,7 +40,7 @@ A game or system designed to test and improve memory.
 
 ## 🎥 My YouTube Channel
 
-![YouTube Banner](https://github.com/user-attachments/assets/50baf2cf-723e-4fc0-b8c3-2ea02093e935)
+![alma_logo](https://github.com/user-attachments/assets/1f5b0b4e-7bb9-4e2b-9751-f90ed2427447)
 
 
 Explore robotics like never before on my [YouTube channel] www.youtube.com/@lumaxlab or www.instagram.com/lumaxlab/
