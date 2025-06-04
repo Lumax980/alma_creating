@@ -1,6 +1,5 @@
 # 🌟 Welcome to ALMA CREATING GitHub! 🌟
 
-![channels4_banner](https://github.com/user-attachments/assets/9164ca38-d6c6-4692-be23-0265aa50179a)
 ![alma_logo_branca](https://github.com/user-attachments/assets/4553e2fc-5ba0-41d4-baa2-66dd39ff1334)
 
 Hello! 👋 We're **ALMA CREATING**, a robotics enthusiast, engineer, and content creator. My passion is bringing ideas to life through robotics, coding, and innovation. Whether you're here to explore my projects, collaborate, or just get inspired, you're in the right place. 
