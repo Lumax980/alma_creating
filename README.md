@@ -2,7 +2,7 @@
 
 ![channels4_banner](https://github.com/user-attachments/assets/9164ca38-d6c6-4692-be23-0265aa50179a)
 
-Hello! 👋 I'm **Lumax Lab**, a robotics enthusiast, engineer, and content creator. My passion is bringing ideas to life through robotics, coding, and innovation. Whether you're here to explore my projects, collaborate, or just get inspired, you're in the right place. 
+Hello! 👋 I'm **ALMA CREATING**, a robotics enthusiast, engineer, and content creator. My passion is bringing ideas to life through robotics, coding, and innovation. Whether you're here to explore my projects, collaborate, or just get inspired, you're in the right place. 
 
 ---
 
