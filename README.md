@@ -84,4 +84,4 @@ All my projects are open-source under the [MIT License](https://opensource.org/l
 
 Stay curious, keep building, and let’s innovate together!
 
-💡 **Lumax Lab**
+💡 **ALMA Creating**
