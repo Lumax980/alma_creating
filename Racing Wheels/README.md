@@ -8,7 +8,7 @@
 
 # Racing Wheels - LUMAX LAB
 
-VIDEO 🎥📹🎬: 
+VIDEO 🎥📹🎬: https://www.instagram.com/p/DMqUCSltQX7/
 
 ## Description
 This code implements a DIY steering wheel simulator using a potentiometer and an SG90 servo motor. The system reads analog input from a potentiometer attached to a homemade cardboard wheel, and maps this input to control the angle of the servo motor. As the user turns the wheel left or right, the servo moves correspondingly, demonstrating basic proportional control. This project is ideal for beginners learning about analog-to-digital conversion, servo control, and physical interaction with electronics. The angle is also printed to the Serial Monitor for real-time debugging and monitoring.
