@@ -1,8 +1,9 @@
 🎮🛞⚙️ RACING WHEELS 🎮🛞⚙️
 
-![Terrific Gaaris-Juttuli](https://github.com/user-attachments/assets/fa6106a8-a8ea-4118-b7c7-cf7f8df17631)
 
-🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE: 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
+<img width="1814" height="920" alt="arduino_servo_potenciometro_volante" src="https://github.com/user-attachments/assets/d11c8e8a-39f0-40ed-8e6a-e9e987f66aa9" />
+
+🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻 CODE 🧑🏻‍💻🧑🏻‍💻🧑🏻‍💻
 
 
 # Racing Wheels - LUMAX LAB
